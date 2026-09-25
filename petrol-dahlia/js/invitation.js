@@ -5,8 +5,11 @@
   const root = document.documentElement;
   ['paper','ink','accent'].forEach(key => root.style.setProperty(`--${key}`, theme[key]));
   const asset = name => `./assets/${name.replace(/\.(png|jpe?g)$/, '.webp')}`;
-  root.style.setProperty('--botanical', `url("${asset('botanical.webp')}")`);
-  root.style.setProperty('--timeline-flower', 'url("./assets/timeline-flower.webp")');
+  const assetUrl = name => {
+    try { return new URL(asset(name), location.href).href; } catch { return asset(name); }
+  };
+  root.style.setProperty('--botanical', `url("${assetUrl('botanical.webp')}")`);
+  root.style.setProperty('--timeline-flower', `url("${assetUrl('timeline-flower.webp')}")`);
   document.body.classList.add(`theme-${data.theme}`, 'locked');
   const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const safeURL = value => { try { const u = new URL(value, location.href); return ['http:','https:','file:'].includes(u.protocol) ? u.href : ''; } catch { return ''; } };
