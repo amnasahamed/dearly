@@ -1,6 +1,7 @@
 (() => {
   'use strict';
   const data = window.WEDDING_DATA;
+  const studioPreview = new URLSearchParams(location.search).get('studio-preview') === '1';
   const theme = window.INVITATION_THEMES[data.theme];
   const root = document.documentElement;
   ['paper','ink','accent'].forEach(key => root.style.setProperty(`--${key}`, theme[key]));
@@ -134,7 +135,7 @@
     if(source('music')) {
       $('media-controls').hidden=false; $('music').hidden=false;
       // Start in the opening gesture without delaying video on an audio download.
-      if(!musicAttempted) { musicAttempted=true; audio.play().then(()=>{ $('music').textContent='Pause music'; $('music').setAttribute('aria-pressed','true'); }).catch(()=>{}); }
+      if(!studioPreview && !musicAttempted) { musicAttempted=true; audio.play().then(()=>{ $('music').textContent='Pause music'; $('music').setAttribute('aria-pressed','true'); }).catch(()=>{}); }
     }
     if(source('openingVideo') && !reduced.matches){
       $('skip').hidden=false;$('skip').focus();opening.hidden=false;
@@ -151,6 +152,27 @@
   hero.addEventListener('error',()=>{hero.hidden=true;});
   $('reopen').addEventListener('click',()=>{clearTimeout(fadeTimer);clearTimeout(openingTimer);window.scrollTo({top:0,behavior:'instant'});opened=false;ambience.setPaused(true);opening.pause();opening.currentTime=0;opening.hidden=true;hero.pause();hero.currentTime=0;$('entrance').hidden=false;$('entrance').classList.remove('leaving','opening');$('open').disabled=false;$('skip').hidden=true;$('invitation').inert=true;$('media-controls').hidden=true;document.body.classList.add('locked');$('open').focus();});
   $('music').addEventListener('click',async()=>{if(audio.paused){try{await audio.play();$('music').textContent='Pause music';$('music').setAttribute('aria-pressed','true');}catch{notify('Music could not be played. Please try again.');}}else{audio.pause();$('music').textContent='Play music';$('music').setAttribute('aria-pressed','false');}});
+  if (studioPreview) {
+    const sampleNote=document.createElement('p');sampleNote.className='rsvp-help';sampleNote.textContent='Sample invitation. Responses are not sent.';
+    $('rsvp-form').prepend(sampleNote);
+    $('rsvp-form').addEventListener('submit',event=>{event.preventDefault();event.stopImmediatePropagation();notify('This is a sample RSVP. No reply has been sent.');},true);
+    $('rsvp-form').querySelector('button[type="submit"]').textContent='Try sample RSVP';
+    window.InvitationPreview = {
+      open: openInvitation,
+      replay: () => { $('reopen').click(); openInvitation(); },
+      sound: () => { $('music').click(); },
+      pause: () => { audio.pause(); opening.pause(); hero.pause(); ambience.setPaused(true); },
+      goto: chapter => {
+        if(chapter === 'opening') { $('reopen').click(); return; }
+        const target = {invitation:'#our-invitation',events:'.schedule-section',rsvp:'.rsvp-section'}[chapter];
+        if(!target) return;
+        opened=true;finishOpening();
+        clearTimeout(fadeTimer);$('entrance').hidden=true;opening.pause();
+        document.querySelector(target)?.scrollIntoView({behavior:reduced.matches?'instant':'smooth',block:'start'});
+      },
+      state: () => ({ opened, sound: !audio.paused })
+    };
+  }
   $('motion').addEventListener('click',()=>{if(reduced.matches)return;motionPaused=!motionPaused;syncMotion();});
   reduced.addEventListener('change',event=>{motionPaused=event.matches;if(event.matches && opened)finishOpening();syncMotion();});
 
