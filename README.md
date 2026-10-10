@@ -13,7 +13,7 @@ The **Dearly Collection** by [InviteStory](https://invitestory.in) is an exclusi
 - **Event Schedule & Calendar Sync**: Timeline with 1-tap Google Calendar save.
 - **Venue Directions**: 1-tap Google Maps navigation.
 - **Background Music**: Integrated audio player with custom soundtrack.
-- **24-Hour Express Turnaround**: Concierge delivery within 24 hours.
+- **First-Draft Delivery**: 48-hour standard, with optional 24-hour (+₹799 / $9) or 12-hour (+₹1,499 / $18) delivery.
 
 ---
 
@@ -21,10 +21,12 @@ The **Dearly Collection** by [InviteStory](https://invitestory.in) is an exclusi
 
 | Region | Price | Delivery Window |
 |---|---|---|
-| **India (INR)** | **₹4,999** | 24 Hours |
-| **International (USD)** | **$80** | 24 Hours |
+| **India (INR)** | **₹4,999** | 48 Hours standard |
+| **International (USD)** | **$75** | 48 Hours standard |
 
 ---
+
+Timing starts after payment and complete details, including overnight. Existing orders retain their original promises. Email RSVP remains included.
 
 ## Editions & Colorways
 
